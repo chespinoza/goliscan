@@ -1,0 +1,12 @@
+hash: 2a232632db4cf34abd901678edc197dc5e12a59726c15439de101f892a7894ef
+updated: 2016-09-10T16:04:20.449482782+02:00
+imports:
+- name: github.com/codegangsta/cli
+  version: a14d7d367bc02b1f57d88de97926727f2d936387
+- name: github.com/ryanuber/go-license
+  version: 027a317812857d68bb611443b5c08bbe96e88598
+- name: gitlab.com/ayufan/golang-cli-helpers
+  version: 0a14b63a7466ee44de4a90f998fad73afa8482bf
+- name: gopkg.in/yaml.v2
+  version: e4d366fc3c7938e2958e662b4258c7a89e1f0e3e
+testImports: []

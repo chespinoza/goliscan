@@ -1,0 +1,41 @@
+---
+image: golang:1.6
+
+stages:
+- test
+- build
+- selfcheck
+
+.docker: &docker
+  stage: test
+  before_script:
+  - source ci/prepare.sh
+  - make deps
+  tags:
+  - docker
+
+statis_analysis:
+  <<: *docker
+  script:
+  - make lint fmt vet complexity
+
+unit_tests:
+  <<: *docker
+  script:
+  - make test
+
+build_binaries:
+  <<: *docker
+  stage: build
+  script:
+  - make build build_all
+  artifacts:
+    expire_in: 7d
+    paths:
+    - out/binaries/*
+
+licenses_check:
+  <<: *docker
+  stage: selfcheck
+  script:
+  - make license
