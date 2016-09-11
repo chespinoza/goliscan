@@ -10,7 +10,7 @@ import (
 	"github.com/codegangsta/cli"
 )
 
-var VERSION = "0.1-dev"
+var VERSION = "dev"
 var REVISION = "HEAD"
 var BRANCH = "master"
 var BUILT = "now"

@@ -54,7 +54,7 @@ complexity:
 
 test:
 	# Run unittests
-	@go test $$(glide novendor)
+	@go test -cover -covermode count $$(glide novendor)
 
 build:
 	# Building $(NAME) in version $(VERSION) for current platform
