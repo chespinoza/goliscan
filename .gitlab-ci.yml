@@ -14,7 +14,7 @@ stages:
   tags:
   - docker
 
-statis_analysis:
+static_analysis:
   <<: *docker
   script:
   - make lint fmt vet complexity

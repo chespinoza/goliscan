@@ -10,6 +10,8 @@ CONFIG_PACKAGE_NAMESPACE=$(shell go list ./config)
 GO_LDFLAGS ?= -X $(CONFIG_PACKAGE_NAMESPACE).VERSION=$(VERSION)  -X $(CONFIG_PACKAGE_NAMESPACE).REVISION=$(REVISION) \
               -X $(CONFIG_PACKAGE_NAMESPACE).BRANCH=$(BRANCH) -X $(CONFIG_PACKAGE_NAMESPACE).BUILT=$(BUILT)
 
+GO_FILES := $(shell find * -name "*.go")
+
 export GO15VENDOREXPERIMENT := 1
 export CGO_ENABLED := 0
 
@@ -29,9 +31,9 @@ deps:
 	go get github.com/Masterminds/glide
 	glide install
 
-license:
+license: $(GO_FILES)
 	# Running licenses check
-	out/binaries/$(NAME) check
+	@out/binaries/$(NAME) check
 
 lint:
 	# Running LINT test
