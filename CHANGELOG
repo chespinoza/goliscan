@@ -1,4 +1,11 @@
-v0.1
+v0.2.0
+
+- Fix ci/prepare.sh script
+- Add minor fixes to Makefile and .gitlab-ci.yml
+- Add first unit test
+- Remove os=freebsd and arch=arm from build platforms
+
+v0.1.0
 
 - Main documentation
 - CI configuration
