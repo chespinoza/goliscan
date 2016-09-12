@@ -15,6 +15,10 @@ GO_FILES := $(shell find * -name "*.go")
 export GO15VENDOREXPERIMENT := 1
 export CGO_ENABLED := 0
 
+export GIT_TREE_URL := https://gitlab.com/tmaczukin/goliscan/tree
+export S3_BUCKET := $(NAME)
+export PROJECT_NAME := GoLiScan
+
 version:
 	@echo "Current version: $(VERSION)"
 	@echo "Current revision: $(REVISION)"
@@ -24,16 +28,22 @@ version:
 
 deps:
 	# Install dependencies
+	go get github.com/Masterminds/glide/
+	glide install
+
+deps-build:
+	# Install build dependencies
 	go get github.com/mitchellh/gox
+
+deps-tests:
+	# Install tests dependencies
 	go get github.com/golang/lint/golint
 	go get github.com/fzipp/gocyclo
 	go install cmd/vet
-	go get github.com/Masterminds/glide
-	glide install
 
 license: $(GO_FILES)
 	# Running licenses check
-	@out/binaries/$(NAME) check
+	@out/binaries/$(NAME)-linux-amd64 check
 
 lint:
 	# Running LINT test
@@ -69,6 +79,15 @@ build_all:
 	@gox $(BUILD_PLATFORMS)      \
 		-ldflags "$(GO_LDFLAGS)" \
 		-output="out/binaries/$(NAME)-{{.OS}}-{{.Arch}}"
+
+prepare_sha:
+	# Prepare SHA-256 checksum file
+	@sha256sum $$(find out/* -type f ! -name "index.html") > out/release.sha256
+
+RELEASE := development
+release:
+	# Doing release for "$(RELEASE)"
+	@ci/release.sh $(RELEASE)
 
 clean:
 	@rm -f out/binaries/*

@@ -5,37 +5,71 @@ stages:
 - test
 - build
 - selfcheck
+- release
+
+cache:
+  key: global_cache
+  paths:
+  - ./glide/
+  - vendor/
 
 .docker: &docker
   stage: test
   before_script:
   - source ci/prepare.sh
-  - make deps
   tags:
   - docker
 
 static_analysis:
   <<: *docker
   script:
-  - make lint fmt vet complexity
+  - make deps deps-tests lint fmt vet complexity
 
 unit_tests:
   <<: *docker
   script:
-  - make test
+  - make deps deps-tests test
 
-build_binaries:
+build:
   <<: *docker
   stage: build
   script:
-  - make build build_all
+  - make deps deps-build build_all prepare_sha
   artifacts:
     expire_in: 7d
     paths:
-    - out/binaries/*
+    - out/
 
 licenses_check:
   <<: *docker
   stage: selfcheck
   script:
-  - make license
+  - make deps deps-tests license
+
+.release: &release
+  <<: *docker
+  stage: release
+  script:
+  - make release RELEASE="$CI_BUILD_NAME"
+  tags:
+  - release
+
+development:
+  <<: *release
+  only:
+  - branches@tmaczukin/goliscan
+  except:
+  - master@tmaczukin/goliscan
+  environment: development
+
+unstable:
+  <<: *release
+  only:
+  - master@tmaczukin/goliscan
+  environment: unstable
+
+stable:
+  <<: *release
+  only:
+  - tags@tmaczukin/goliscan
+  environment: stable
