@@ -4,7 +4,7 @@ REVISION := $(shell git rev-parse --short HEAD || echo "unknown")
 BRANCH := $(shell git show-ref | grep "$(REVISION)" | grep -v HEAD | awk '{print $$2}' | sed 's|refs/remotes/origin/||' | sed 's|refs/heads/||' | sort | head -n 1)
 BUILT := $(shell date +%Y-%m-%dT%H:%M:%S%z)
 
-BUILD_PLATFORMS ?= -os=linux -os=darwin -os=freebsd -os=windows -arch=amd64 -arch=386 -arch=arm
+BUILD_PLATFORMS ?= -os=linux -os=darwin -os=windows -arch=amd64 -arch=386
 
 CONFIG_PACKAGE_NAMESPACE=$(shell go list ./config)
 GO_LDFLAGS ?= -X $(CONFIG_PACKAGE_NAMESPACE).VERSION=$(VERSION)  -X $(CONFIG_PACKAGE_NAMESPACE).REVISION=$(REVISION) \
