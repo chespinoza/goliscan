@@ -1,7 +1,7 @@
 # GoLiScan
 
-[![License MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://gitlab.com/tmaczukin/goligen/raw/master/LICENSE)
-[![Build status](https://gitlab.com/tmaczukin/goliscan/badges/master/build.svg)](https://gitlab.com/tmaczukin/goligen/commits/master)
+[![License MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://gitlab.com/tmaczukin/goliscan/raw/master/LICENSE)
+[![Build status](https://gitlab.com/tmaczukin/goliscan/badges/master/build.svg)](https://gitlab.com/tmaczukin/goliscan/commits/master)
 [![Coverage report](https://gitlab.com/tmaczukin/goliscan/badges/master/coverage.svg)](https://gitlab.com/tmaczukin/goliscan/commits/master)
 
 License scanner and checker written in GO and designed to use with
@@ -15,6 +15,8 @@ project by Fabio Rapposelli.
 ## Table of Contents
 
 - [Installation](#installation)
+  - [Download a compiled binary](#download-a-compiled-binary)
+  - [Install from source](#install-from-source)
 - [Usage](#usage)
   - [List used licenses](#list-used-licenses)
     - [Output settings](#output-settings)
@@ -27,17 +29,54 @@ project by Fabio Rapposelli.
 
 ## Installation
 
-Currently there is no source of compiled binaries. You can install the tool from source
-with:
+### Download a compiled binary
+
+You can download the current stable version of the project from
+`https://artifacts.maczukin.pl/goliscan/${RELEASE}/index.html`, where
+`${RELEASE}` is one of:
+
+| Release | Description |
+|---------|-------------|
+| `release_stable` | The current _stable_ version of the project |
+| `release_unstable` | The current _unstable_ version of the project |
+| `vX.Y.Z` | The `vX.Y.Z` version of the project, eg. `v0.1.0` |
+| `branch/name` | Version from the `branch/name` branch in git tree |
+
+Examples:
+
+1. If you want to install the latest _stable_ version - whichever it will
+   be at the moment - you can find the download page at:
+   https://artifacts.maczukin.pl/goliscan/release_stable/index.html.
+
+    To install the binary for Linux OS and amd64 platform:
+
+    ```bash
+    $ sudo wget -O /usr/local/bin/goliscan https://artifacts.maczukin.pl/goliscan/release_stable/binaries/goliscan-linux-amd64
+    $ sudo chmod +x /usr/local/bin/goliscan
+    ```
+
+1. If you want to install the `v0.1.0` version, you can find the download pave
+   at: https://artifacts.maczukin.pl/goliscan/v0.3.0/index.html.
+
+    To install the binary for Linux OS and amd64 platform:
+
+    ```bash
+    $ sudo wget -O /usr/local/bin/goliscan https://artifacts.maczukin.pl/goliscan/v0.3.0/binaries/goliscan-linux-amd64
+    $ sudo chmod +x /usr/local/bin/goliscan
+    ```
+
+### Install from source
+
+> **Notice:**
+> You need to have a configured GO environment for this
+
+To install GoLiScan from sourcec simply execute command:
 
 ```bash
 $ go install gitlab.com/tmaczukin/goliscan
 ```
 
-To do this you should have a configured GO environment.
-
-Soon there should be ready a repository of compiled binaries for multiple platforms, so the installation will be much
-simpler and it will not require a GO development environment.
+This will download current sources and install the binary in your `$GOPATH/bin`.
 
 ## Usage
 

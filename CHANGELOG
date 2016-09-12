@@ -1,3 +1,8 @@
+v0.3.0
+
+- Add release step to CI Pipeline
+- Update installation documentation in README.md
+
 v0.2.0
 
 - Fix ci/prepare.sh script
