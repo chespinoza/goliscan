@@ -1,3 +1,7 @@
+v0.4.0
+
+- Show license finding errors
+
 v0.3.0
 
 - Add release step to CI Pipeline

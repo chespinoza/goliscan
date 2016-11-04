@@ -2,7 +2,6 @@ package commands
 
 import (
 	"github.com/codegangsta/cli"
-	"github.com/ryanuber/go-license"
 
 	"gitlab.com/tmaczukin/goliscan/config"
 	"gitlab.com/tmaczukin/goliscan/scanner"
@@ -36,8 +35,15 @@ func (l *ListCommand) getOutputHandler() (outputHandler *scanner.LicensesOutputH
 	return
 }
 
-func (l *ListCommand) listHandler(pkgName string, license *license.License) {
-	l.printer.AddData("INFO", "Found license", pkgName, license.Type)
+func (l *ListCommand) listHandler(pkgName string, licenseSearchResult scanner.LicenseSearchResult) {
+	license := licenseSearchResult.License
+	error := licenseSearchResult.Error
+
+	if license != nil {
+		l.printer.AddData("INFO", "Found license", pkgName, license.Type)
+	} else if error != nil {
+		l.printer.AddData("INFO", error.Error(), pkgName, "unknown")
+	}
 }
 
 func init() {

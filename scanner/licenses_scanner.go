@@ -10,7 +10,7 @@ import (
 
 type LicensesScanner struct{}
 
-func (l *LicensesScanner) GetLicenses(root string) (licenses map[string]*license.License, err error) {
+func (l *LicensesScanner) GetLicenses(root string) (licenses map[string]LicenseSearchResult, err error) {
 	pkgScanner := NewPackagesScanner()
 
 	pkgNames, err := pkgScanner.GetPackages(root)
@@ -18,17 +18,25 @@ func (l *LicensesScanner) GetLicenses(root string) (licenses map[string]*license
 		return
 	}
 
-	licenses = make(map[string]*license.License)
+	licenses = make(map[string]LicenseSearchResult)
 
 	for pkgName := range pkgNames {
 		finalPkgName, lic, err := l.getPkgLicense(root, pkgName)
-		if err != nil || lic == nil {
+		if l.isKnownLicenseError(err) {
 			continue
 		}
-		licenses[finalPkgName] = lic
+
+		licenses[finalPkgName] = newLicenseSearchResult(lic, err)
 	}
 
 	return
+}
+
+func (l *LicensesScanner) isKnownLicenseError(err error) bool {
+	return err != nil &&
+		err.Error() != license.ErrMultipleLicenses &&
+		err.Error() != license.ErrNoLicenseFile &&
+		err.Error() != license.ErrUnrecognizedLicense
 }
 
 func (l *LicensesScanner) getPkgLicense(root, pkgName string) (finalPkgName string, lic *license.License, err error) {

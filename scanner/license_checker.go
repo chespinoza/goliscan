@@ -6,7 +6,7 @@ import (
 	"gitlab.com/tmaczukin/goliscan/config"
 )
 
-type StateHandlerFn func(pkgName string, license *license.License)
+type StateHandlerFn func(pkgName string, licenseSearchResult LicenseSearchResult)
 
 type LicenseChecker struct {
 	OkStateHandler              StateHandlerFn
@@ -17,9 +17,10 @@ type LicenseChecker struct {
 	configuration *config.Config
 }
 
-func (c *LicenseChecker) Check(pkgName string, license *license.License) {
+func (c *LicenseChecker) Check(pkgName string, licenseSearchResult LicenseSearchResult) {
 	var handler StateHandlerFn
 
+	license := licenseSearchResult.License
 	switch {
 	case c.isExceptioned(license, pkgName):
 		handler = c.ExceptionedStateHandler
@@ -31,20 +32,21 @@ func (c *LicenseChecker) Check(pkgName string, license *license.License) {
 		handler = c.CriteriaUnknownStateHandler
 	}
 
-	handler(pkgName, license)
+	handler(pkgName, licenseSearchResult)
 }
 
 func (c *LicenseChecker) isExceptioned(license *license.License, pkgName string) bool {
-	return c.configuration.Unaccepted[license.Type] && c.configuration.Exceptions[pkgName]
+	return license != nil && c.configuration.Unaccepted[license.Type] && c.configuration.Exceptions[pkgName]
 }
 
 func (c *LicenseChecker) isCritical(license *license.License, pkgName string) bool {
-	return (c.configuration.Unaccepted[license.Type] && !c.configuration.Exceptions[pkgName]) ||
-		(!c.configuration.Accepted[license.Type] && !c.configuration.AllowUnknown)
+	return license != nil &&
+		((c.configuration.Unaccepted[license.Type] && !c.configuration.Exceptions[pkgName]) ||
+			(!c.configuration.Accepted[license.Type] && !c.configuration.AllowUnknown))
 }
 
 func (c *LicenseChecker) isOK(license *license.License) bool {
-	return c.configuration.Accepted[license.Type]
+	return license != nil && c.configuration.Accepted[license.Type]
 }
 
 func NewLicenseChecker(configuration *config.Config) (*LicenseChecker, error) {

@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/codegangsta/cli"
-	"github.com/ryanuber/go-license"
 
 	"gitlab.com/tmaczukin/goliscan/config"
 	"gitlab.com/tmaczukin/goliscan/scanner"
@@ -51,20 +50,27 @@ func (c *CheckCommand) prepareHandlers() (outputHandler *scanner.LicensesOutputH
 		ThrowError(err)
 	}
 
-	c.checker.OkStateHandler = func(pkgName string, license *license.License) {
-		printer.AddData("OK", "Found accepted license", pkgName, license.Type)
+	c.checker.OkStateHandler = func(pkgName string, licenseSearchResult scanner.LicenseSearchResult) {
+		printer.AddData("OK", "Found accepted license", pkgName, licenseSearchResult.License.Type)
 	}
 
-	c.checker.ExceptionedStateHandler = func(pkgName string, license *license.License) {
-		printer.AddData("WARNING", "Found exceptioned package", pkgName, license.Type)
+	c.checker.ExceptionedStateHandler = func(pkgName string, licenseSearchResult scanner.LicenseSearchResult) {
+		printer.AddData("WARNING", "Found exceptioned package", pkgName, licenseSearchResult.License.Type)
 	}
 
-	c.checker.CriteriaUnknownStateHandler = func(pkgName string, license *license.License) {
-		printer.AddData("WARNING", "Criteria for license unknown", pkgName, license.Type)
+	c.checker.CriteriaUnknownStateHandler = func(pkgName string, licenseSearchResult scanner.LicenseSearchResult) {
+		license := licenseSearchResult.License
+		error := licenseSearchResult.Error
+
+		if license != nil {
+			printer.AddData("WARNING", "Criteria for license unknown", pkgName, license.Type)
+		} else if error != nil {
+			printer.AddData("WARNING", error.Error(), pkgName, "unknown")
+		}
 	}
 
-	c.checker.CriticalStateHandler = func(pkgName string, license *license.License) {
-		printer.AddData("CRITICAL", "Found unaccepted license", pkgName, license.Type)
+	c.checker.CriticalStateHandler = func(pkgName string, licenseSearchResult scanner.LicenseSearchResult) {
+		printer.AddData("CRITICAL", "Found unaccepted license", pkgName, licenseSearchResult.License.Type)
 		c.foundNonApproved = true
 	}
 

@@ -1,6 +1,7 @@
 package scanner
 
 import (
+	"errors"
 	"os"
 	"sort"
 
@@ -9,14 +10,44 @@ import (
 	"gitlab.com/tmaczukin/goliscan/config"
 )
 
-type licensesOutputHandlerFn func(pkgName string, license *license.License)
+type licensesOutputHandlerFn func(pkgName string, licenseSearchResult LicenseSearchResult)
+
+type LicenseSearchResult struct {
+	License *license.License
+	Error   error
+}
+
+func newLicenseSearchResult(lic *license.License, err error) LicenseSearchResult {
+	if err != nil {
+		var error string
+		switch {
+		case err.Error() == license.ErrUnrecognizedLicense:
+			error = "Could not guess license type"
+		case err.Error() == license.ErrNoLicenseFile:
+			error = "Unable to find any license file"
+		case err.Error() == license.ErrMultipleLicenses:
+			error = "Multiple license files found"
+		}
+
+		return LicenseSearchResult{
+			License: nil,
+			Error:   errors.New(error),
+		}
+	}
+
+	return LicenseSearchResult{
+		License: lic,
+		Error:   nil,
+	}
+}
 
 type LicensesOutputHandler struct {
 	Printer *OutputPrinter
 
 	handler  licensesOutputHandlerFn
-	licenses map[string]*license.License
 	settings config.OutputSettings
+
+	licenseSearchResults map[string]LicenseSearchResult
 }
 
 func (h *LicensesOutputHandler) GetPrinter() (*OutputPrinter, error) {
@@ -65,21 +96,21 @@ func (h *LicensesOutputHandler) searchLicenses() (err error) {
 	}
 
 	licenseScanner := NewLicenseScanner()
-	h.licenses, err = licenseScanner.GetLicenses(root)
+	h.licenseSearchResults, err = licenseScanner.GetLicenses(root)
 
 	return
 }
 
 func (h *LicensesOutputHandler) handleSortedList() (err error) {
 	var keys []string
-	for pkgName := range h.licenses {
+	for pkgName := range h.licenseSearchResults {
 		keys = append(keys, pkgName)
 	}
 	sort.Strings(keys)
 
 	for _, pkgName := range keys {
-		license := h.licenses[pkgName]
-		h.handler(pkgName, license)
+		licenseSearchResult := h.licenseSearchResults[pkgName]
+		h.handler(pkgName, licenseSearchResult)
 	}
 
 	return
