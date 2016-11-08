@@ -8,7 +8,7 @@ import (
 	"text/template"
 )
 
-var defaultOutputTemplate = "[{{.Type | printf \"%8s\"}}]  {{.Message | printf \"%-28s\"}}  license = {{.License | printf \"%-14s\"}}  direct dependence = {{.Direct | printf \"%-3s\"}}  package = {{.Package}}"
+var defaultOutputTemplate = "[{{.Type | printf \"%8s\"}}]  {{.Message | printf \"%-28s\"}}  license = {{.License | printf \"%-14s\"}}  direct dependency = {{.Direct | printf \"%-3s\"}}  package = {{.Package}}"
 
 type outputLine struct {
 	Type    string

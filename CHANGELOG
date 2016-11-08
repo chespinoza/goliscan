@@ -1,3 +1,7 @@
+v0.6.1
+
+- Fix a typo in defaultOutputTemplate
+
 v0.6.0
 
 - Add dependency directness discovering
