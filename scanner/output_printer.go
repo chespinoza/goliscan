@@ -8,13 +8,14 @@ import (
 	"text/template"
 )
 
-var defaultOutputTemplate = "[{{.Type | printf \"%8s\"}}]  {{.Message | printf \"%-28s\"}}  license = {{.License | printf \"%-14s\"}}  package = {{.Package}}"
+var defaultOutputTemplate = "[{{.Type | printf \"%8s\"}}]  {{.Message | printf \"%-28s\"}}  license = {{.License | printf \"%-14s\"}}  direct dependence = {{.Direct | printf \"%-3s\"}}  package = {{.Package}}"
 
 type outputLine struct {
 	Type    string
 	Message string
-	Package string
 	License string
+	Direct  string
+	Package string
 }
 
 type OutputPrinter struct {
@@ -23,8 +24,19 @@ type OutputPrinter struct {
 	tmpl *template.Template
 }
 
-func (l *OutputPrinter) AddData(level, message, pkgName, license string) {
-	l.Lines = append(l.Lines, &outputLine{level, message, pkgName, license})
+func (l *OutputPrinter) AddData(level, message, pkgName, license string, direct bool) {
+	directString := "no"
+	if direct {
+		directString = "yes"
+	}
+
+	l.Lines = append(l.Lines, &outputLine{
+		Type:    level,
+		Message: message,
+		License: license,
+		Direct:  directString,
+		Package: pkgName,
+	})
 }
 
 func (l *OutputPrinter) Print() (err error) {

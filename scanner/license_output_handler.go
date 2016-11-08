@@ -15,9 +15,10 @@ type licensesOutputHandlerFn func(pkgName string, licenseSearchResult LicenseSea
 type LicenseSearchResult struct {
 	License *license.License
 	Error   error
+	Direct  bool
 }
 
-func newLicenseSearchResult(lic *license.License, err error) LicenseSearchResult {
+func newLicenseSearchResult(lic *license.License, pkgInfo *PackageInfo, err error) LicenseSearchResult {
 	if err != nil {
 		var error string
 		switch {
@@ -32,12 +33,14 @@ func newLicenseSearchResult(lic *license.License, err error) LicenseSearchResult
 		return LicenseSearchResult{
 			License: nil,
 			Error:   errors.New(error),
+			Direct:  !pkgInfo.FromVendor,
 		}
 	}
 
 	return LicenseSearchResult{
 		License: lic,
 		Error:   nil,
+		Direct:  !pkgInfo.FromVendor,
 	}
 }
 
@@ -110,10 +113,20 @@ func (h *LicensesOutputHandler) handleSortedList() (err error) {
 
 	for _, pkgName := range keys {
 		licenseSearchResult := h.licenseSearchResults[pkgName]
+
+		if h.shouldSkip(licenseSearchResult.Direct) {
+			continue
+		}
+
 		h.handler(pkgName, licenseSearchResult)
 	}
 
 	return
+}
+
+func (h *LicensesOutputHandler) shouldSkip(isDependencyDirect bool) bool {
+	return (h.settings.DirectOnly && !isDependencyDirect) ||
+		(h.settings.IndirectOnly && isDependencyDirect)
 }
 
 func NewLicensesOutputHandler(settings config.OutputSettings, handler licensesOutputHandlerFn) *LicensesOutputHandler {

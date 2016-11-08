@@ -20,13 +20,13 @@ func (l *LicensesScanner) GetLicenses(root string) (licenses map[string]LicenseS
 
 	licenses = make(map[string]LicenseSearchResult)
 
-	for pkgName := range pkgNames {
+	for pkgName, pkgInfo := range pkgNames {
 		finalPkgName, lic, err := l.getPkgLicense(root, pkgName)
 		if l.isKnownLicenseError(err) {
 			continue
 		}
 
-		licenses[finalPkgName] = newLicenseSearchResult(lic, err)
+		licenses[finalPkgName] = newLicenseSearchResult(lic, pkgInfo, err)
 	}
 
 	return

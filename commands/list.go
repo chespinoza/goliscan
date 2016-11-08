@@ -40,9 +40,9 @@ func (l *ListCommand) listHandler(pkgName string, licenseSearchResult scanner.Li
 	error := licenseSearchResult.Error
 
 	if license != nil {
-		l.printer.AddData("INFO", "Found license", pkgName, license.Type)
+		l.printer.AddData("INFO", "Found license", pkgName, license.Type, licenseSearchResult.Direct)
 	} else if error != nil {
-		l.printer.AddData("INFO", error.Error(), pkgName, "unknown")
+		l.printer.AddData("INFO", error.Error(), pkgName, "unknown", licenseSearchResult.Direct)
 	}
 }
 

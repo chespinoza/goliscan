@@ -1,3 +1,7 @@
+v0.6.0
+
+- Add dependency directness discovering
+
 v0.5.0
 
 - Migrate to Go 1.7

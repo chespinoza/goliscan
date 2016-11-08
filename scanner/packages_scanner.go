@@ -8,11 +8,15 @@ import (
 	"strings"
 )
 
-type PackagesScanner struct {
-	pkgNames map[string]bool
+type PackageInfo struct {
+	FromVendor bool
 }
 
-func (s *PackagesScanner) GetPackages(root string) (map[string]bool, error) {
+type PackagesScanner struct {
+	pkgNames map[string]*PackageInfo
+}
+
+func (s *PackagesScanner) GetPackages(root string) (map[string]*PackageInfo, error) {
 	root, err := s.resolveRootSymlink(root)
 	if err != nil {
 		return nil, err
@@ -43,7 +47,7 @@ func (s *PackagesScanner) resolveRootSymlink(root string) (string, error) {
 }
 
 func (s *PackagesScanner) scanImports(path string, info os.FileInfo, err error) (walkErr error) {
-	next, walkErr := s.checkIfShouldBeScanned(path, info)
+	next, walkErr := s.checkIfShouldBeSkipped(path, info)
 	if next || walkErr != nil {
 		return
 	}
@@ -54,15 +58,27 @@ func (s *PackagesScanner) scanImports(path string, info os.FileInfo, err error) 
 		return walkErr
 	}
 
+	isVendor := strings.Contains(path, "/vendor/")
+
 	for _, importSpec := range astFile.Imports {
 		pkgName := strings.Replace(importSpec.Path.Value, "\"", "", -1)
-		s.pkgNames[pkgName] = true
+		s.markPackage(pkgName, isVendor)
 	}
 
 	return nil
 }
 
-func (s *PackagesScanner) checkIfShouldBeScanned(path string, info os.FileInfo) (bool, error) {
+func (s *PackagesScanner) markPackage(pkgName string, isVendor bool) {
+	if s.pkgNames[pkgName] == nil {
+		s.pkgNames[pkgName] = &PackageInfo{
+			FromVendor: false,
+		}
+	}
+
+	s.pkgNames[pkgName].FromVendor = s.pkgNames[pkgName].FromVendor || isVendor
+}
+
+func (s *PackagesScanner) checkIfShouldBeSkipped(path string, info os.FileInfo) (bool, error) {
 	if info.IsDir() {
 		name := info.Name()
 		if strings.HasPrefix(name, ".") || strings.HasPrefix(name, "_") || name == "testdata" {
@@ -80,6 +96,6 @@ func (s *PackagesScanner) checkIfShouldBeScanned(path string, info os.FileInfo) 
 
 func NewPackagesScanner() *PackagesScanner {
 	return &PackagesScanner{
-		pkgNames: make(map[string]bool),
+		pkgNames: make(map[string]*PackageInfo),
 	}
 }

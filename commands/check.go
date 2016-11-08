@@ -51,11 +51,11 @@ func (c *CheckCommand) prepareHandlers() (outputHandler *scanner.LicensesOutputH
 	}
 
 	c.checker.OkStateHandler = func(pkgName string, licenseSearchResult scanner.LicenseSearchResult) {
-		printer.AddData("OK", "Found accepted license", pkgName, licenseSearchResult.License.Type)
+		printer.AddData("OK", "Found accepted license", pkgName, licenseSearchResult.License.Type, licenseSearchResult.Direct)
 	}
 
 	c.checker.ExceptionedStateHandler = func(pkgName string, licenseSearchResult scanner.LicenseSearchResult) {
-		printer.AddData("WARNING", "Found exceptioned package", pkgName, licenseSearchResult.License.Type)
+		printer.AddData("WARNING", "Found exceptioned package", pkgName, licenseSearchResult.License.Type, licenseSearchResult.Direct)
 	}
 
 	c.checker.CriteriaUnknownStateHandler = func(pkgName string, licenseSearchResult scanner.LicenseSearchResult) {
@@ -63,14 +63,14 @@ func (c *CheckCommand) prepareHandlers() (outputHandler *scanner.LicensesOutputH
 		error := licenseSearchResult.Error
 
 		if license != nil {
-			printer.AddData("WARNING", "Criteria for license unknown", pkgName, license.Type)
+			printer.AddData("WARNING", "Criteria for license unknown", pkgName, license.Type, licenseSearchResult.Direct)
 		} else if error != nil {
-			printer.AddData("WARNING", error.Error(), pkgName, "unknown")
+			printer.AddData("WARNING", error.Error(), pkgName, "unknown", licenseSearchResult.Direct)
 		}
 	}
 
 	c.checker.CriticalStateHandler = func(pkgName string, licenseSearchResult scanner.LicenseSearchResult) {
-		printer.AddData("CRITICAL", "Found unaccepted license", pkgName, licenseSearchResult.License.Type)
+		printer.AddData("CRITICAL", "Found unaccepted license", pkgName, licenseSearchResult.License.Type, licenseSearchResult.Direct)
 		c.foundNonApproved = true
 	}
 
