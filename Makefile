@@ -91,3 +91,6 @@ release:
 
 clean:
 	@rm -f out/binaries/*
+
+run_dev_container:
+	@docker run --rm -t -i -v $$(pwd):/src -w /src --entrypoint /src/ci/dev_entrypoint.sh golang:1.7 bash

@@ -1,6 +1,7 @@
 v0.6.0
 
 - Add dependency directness discovering
+- Add development environment container configuration
 
 v0.5.0
 
