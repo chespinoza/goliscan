@@ -34,9 +34,9 @@ func (l *LicensesScanner) GetLicenses(root string) (licenses map[string]LicenseS
 
 func (l *LicensesScanner) isKnownLicenseError(err error) bool {
 	return err != nil &&
-		err.Error() != license.ErrMultipleLicenses.Error() &&
-		err.Error() != license.ErrNoLicenseFile.Error() &&
-		err.Error() != license.ErrUnrecognizedLicense.Error()
+		err.Error() != license.ErrMultipleLicenses &&
+		err.Error() != license.ErrNoLicenseFile &&
+		err.Error() != license.ErrUnrecognizedLicense
 }
 
 func (l *LicensesScanner) getPkgLicense(root, pkgName string) (finalPkgName string, lic *license.License, err error) {
@@ -51,7 +51,7 @@ func (l *LicensesScanner) getPkgLicense(root, pkgName string) (finalPkgName stri
 	if pkgPath.IsDir() {
 		lic, err = license.NewFromDir(path)
 		if err != nil {
-			if err.Error() == license.ErrNoLicenseFile.Error() {
+			if err.Error() == license.ErrNoLicenseFile {
 				return l.lookupPkgParentDir(root, pkgName)
 			}
 			return
