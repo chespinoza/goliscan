@@ -7,8 +7,8 @@ import (
 
 	"github.com/codegangsta/cli"
 
-	"gitlab.com/tmaczukin/goliscan/commands"
-	"gitlab.com/tmaczukin/goliscan/config"
+	"github.com/chespinoza/goliscan/commands"
+	"github.com/chespinoza/goliscan/config"
 )
 
 func main() {

@@ -3,7 +3,7 @@ package scanner
 import (
 	"github.com/ryanuber/go-license"
 
-	"gitlab.com/tmaczukin/goliscan/config"
+	"github.com/chespinoza/goliscan/config"
 )
 
 type StateHandlerFn func(pkgName string, licenseSearchResult LicenseSearchResult)

@@ -3,8 +3,8 @@ package commands
 import (
 	"github.com/codegangsta/cli"
 
-	"gitlab.com/tmaczukin/goliscan/config"
-	"gitlab.com/tmaczukin/goliscan/scanner"
+	"github.com/chespinoza/goliscan/config"
+	"github.com/chespinoza/goliscan/scanner"
 )
 
 type ListCommand struct {
