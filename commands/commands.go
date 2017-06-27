@@ -1,7 +1,7 @@
 package commands
 
 import (
-	"github.com/codegangsta/cli"
+	"github.com/urfave/cli"
 
 	"gitlab.com/ayufan/golang-cli-helpers"
 )

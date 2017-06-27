@@ -22,11 +22,11 @@ func newLicenseSearchResult(lic *license.License, pkgInfo *PackageInfo, err erro
 	if err != nil {
 		var error string
 		switch {
-		case err.Error() == license.ErrUnrecognizedLicense:
+		case err.Error() == license.ErrUnrecognizedLicense.Error():
 			error = "Could not guess license type"
-		case err.Error() == license.ErrNoLicenseFile:
+		case err.Error() == license.ErrNoLicenseFile.Error():
 			error = "Unable to find any license file"
-		case err.Error() == license.ErrMultipleLicenses:
+		case err.Error() == license.ErrMultipleLicenses.Error():
 			error = "Multiple license files found"
 		}
 

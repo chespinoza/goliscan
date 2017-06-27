@@ -7,7 +7,7 @@ import (
 	"text/template"
 	"time"
 
-	"github.com/codegangsta/cli"
+	"github.com/urfave/cli"
 )
 
 var VERSION = "dev"

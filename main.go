@@ -5,7 +5,7 @@ import (
 	"os"
 	"path"
 
-	"github.com/codegangsta/cli"
+	"github.com/urfave/cli"
 
 	"github.com/chespinoza/goliscan/commands"
 	"github.com/chespinoza/goliscan/config"
