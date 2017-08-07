@@ -178,9 +178,11 @@ license in `CRITICAL` state - the test will be failed and the command
 will exit with an exit code `1`. This makes this tool usable in _CI_
 scripts.
 
-#### Check licenses Strict mode
+#### Check licenses using Strict mode
 
-licenses in `WARNING` state will fail and only `OK` state will be accepted
+Licenses in `WARNING` state will fail and only `OK` state will be accepted
+
+example: ```goliscan check -strict``` 
 
 
 To check licenses simply execute:
