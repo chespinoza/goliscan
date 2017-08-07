@@ -172,11 +172,16 @@ Each checked license can be in one of three states:
 | `WARNING`  | License doesn't meet acceptance criteria, but package was added to `exceptions` list (see [configuration file][configuration-file] section for more details) |
 | `CRITICAL` | License doesn't meet acceptance criteria    |
 
-Licenses in `OK` and `WARNING` states are both treat as accepted. The
-warning is only a printed information. But if there is at least one
+Licenses in `OK` and `WARNING` states are both treat as accepted. 
+The warning is only a printed information. But if there is at least one
 license in `CRITICAL` state - the test will be failed and the command
 will exit with an exit code `1`. This makes this tool usable in _CI_
 scripts.
+
+#### Check licenses Strict mode
+
+licenses in `WARNING` state will fail and only `OK` state will be accepted
+
 
 To check licenses simply execute:
 

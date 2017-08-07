@@ -14,6 +14,8 @@ type CheckCommand struct {
 
 	File string `short:"c" long:"config" description:"Configuration file"`
 
+	Strict bool `short:"s" long:"strict" description:"Apply strict behaviour"`
+
 	foundNonApproved bool
 	checker          *scanner.LicenseChecker
 }
@@ -66,6 +68,9 @@ func (c *CheckCommand) prepareHandlers() (outputHandler *scanner.LicensesOutputH
 			printer.AddData("WARNING", "Criteria for license unknown", pkgName, license.Type, licenseSearchResult.Direct)
 		} else if error != nil {
 			printer.AddData("WARNING", error.Error(), pkgName, "unknown", licenseSearchResult.Direct)
+		}
+		if c.Strict {
+			c.foundNonApproved = true
 		}
 	}
 
