@@ -16,7 +16,7 @@
 [[projects]]
   name = "github.com/ryanuber/go-license"
   packages = ["."]
-  revision = "834c7d6d458a93f4a307acdb141b6473f268faa8"
+  revision = "9c9d2aca2d1a36bd73b496ebd2fd14fea6aca9a2"
 
 [[projects]]
   name = "github.com/stretchr/testify"
@@ -45,6 +45,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "cd71ebfafa908a268dfa53c590f0aae481d07f69ff5b17e087f833a69529e3b8"
+  inputs-digest = "092f382647480e73349955f81d1648a33473e9666e940617709c0191967848e1"
   solver-name = "gps-cdcl"
   solver-version = 1

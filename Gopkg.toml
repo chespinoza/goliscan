@@ -22,7 +22,8 @@
 
 
 [[constraint]]
-  revision = "834c7d6d458a93f4a307acdb141b6473f268faa8"
+  revision = "9c9d2aca2d1a36bd73b496ebd2fd14fea6aca9a2"
+  #branch = "master"
   name = "github.com/ryanuber/go-license"
 
 [[constraint]]
